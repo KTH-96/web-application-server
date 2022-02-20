@@ -5,9 +5,13 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Map;
 
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.HttpRequestUtils;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -27,15 +31,21 @@ public class RequestHandler extends Thread {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             String line = br.readLine();
-            log.info("Request Line = {}", line);
-            String[] split = line.split(" ");
-            while (!line.equals("")) {
-                line = br.readLine();
-                log.info("Header = {}", line);
+
+            String url = HttpRequestUtils.getUrl(line);
+            if (url.startsWith("/user/create")) {
+                int index = url.indexOf("?");
+                String requestPath = url.substring(0, index);
+                String queryString = url.substring(index + 1);
+                Map<String, String> stringData = HttpRequestUtils.parseQueryString(queryString);
+                User user = new User(stringData.get("userId"),stringData.get("password"),
+                        stringData.get("name"), stringData.get("email"));
+                log.info("User = {}", user);
+                url = "/index.html";
             }
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(Paths.get("/Users/taehyun/IdeaProjects/web-application-server/webapp" + split[1]));
+            byte[] body = Files.readAllBytes(Paths.get("./webapp" + url));
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {

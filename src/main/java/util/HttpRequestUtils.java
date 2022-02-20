@@ -6,8 +6,18 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.RequestHandler;
 
 public class HttpRequestUtils {
+    private static final Logger log = LoggerFactory.getLogger(HttpRequestUtils.class);
+    public static String getUrl(String firstLine) {
+        log.info("Request Line = {}", firstLine);
+        String[] split = firstLine.split(" ");
+        return split[1];
+    }
+
     /**
      * queryString은 URL에서 ? 이후에 전달되는 field1=value1&field2=value2 형식임
      */
@@ -16,7 +26,7 @@ public class HttpRequestUtils {
     }
 
     /**
-     *   쿠키값은 name1=value1; name2=value2 형식임
+     * 쿠키값은 name1=value1; name2=value2 형식임
      */
     public static Map<String, String> parseCookies(String cookies) {
         return parseValues(cookies, ";");
