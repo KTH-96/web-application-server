@@ -15,7 +15,9 @@
 * 각 요구사항을 구현하는 것이 중요한 것이 아니라 구현 과정을 통해 학습한 내용을 인식하는 것이 배움에 중요하다. 
 
 ### 요구사항 1 - http://localhost:8080/index.html로 접속시 응답
-* 
+* request message의 끝은 ""문자가 온다는점
+* 파일에 접근하는것은 `Files.readAllByte` 메소드를 통해 `[]byte`로 읽어올 수 있었는데 index.html파일의 path를 어떻게 가져올까 고민을 하다 `Path.get(webapp패키지 path + requestLine에서 가져온 파일이름)`으로 [해결](https://mkyong.com/java/java-files-readallbytes-example/) 했습니다
+
 
 ### 요구사항 2 - get 방식으로 회원가입
 * 
